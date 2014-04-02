@@ -221,3 +221,8 @@ func (v *WebView) GetSnapshot(resultCallback func(result *image.RGBA, err error)
 		cCallback,
 		userData)
 }
+
+// Returns the pointer to the underlying WebkitWebView
+func (v *WebView) WebKitWebView() *C.WebKitWebView {
+	return v.webView
+}
