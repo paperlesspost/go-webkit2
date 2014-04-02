@@ -24,7 +24,7 @@ import (
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html.
 type WebView struct {
 	*gtk.Widget
-	webView *C.WebKitWebView
+	WebKitWebView *C.WebKitWebView
 }
 
 // NewWebView creates a new WebView with the default WebContext and the default
@@ -55,7 +55,7 @@ func newWebView(webViewWidget *C.GtkWidget) *WebView {
 // See also: webkit_web_view_get_context at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-get-context.
 func (v *WebView) Context() *WebContext {
-	return &WebContext{C.webkit_web_view_get_context(v.webView)}
+	return &WebContext{C.webkit_web_view_get_context(v.WebKitWebView)}
 }
 
 // LoadURI requests loading of the specified URI string.
@@ -63,7 +63,7 @@ func (v *WebView) Context() *WebContext {
 // See also: webkit_web_view_load_uri at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-load-uri
 func (v *WebView) LoadURI(uri string) {
-	C.webkit_web_view_load_uri(v.webView, (*C.gchar)(C.CString(uri)))
+	C.webkit_web_view_load_uri(v.WebKitWebView, (*C.gchar)(C.CString(uri)))
 }
 
 // LoadHTML loads the given content string with the specified baseURI. The MIME
@@ -72,7 +72,7 @@ func (v *WebView) LoadURI(uri string) {
 // See also: webkit_web_view_load_html at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-load-html
 func (v *WebView) LoadHTML(content, baseURI string) {
-	C.webkit_web_view_load_html(v.webView, (*C.gchar)(C.CString(content)), (*C.gchar)(C.CString(baseURI)))
+	C.webkit_web_view_load_html(v.WebKitWebView, (*C.gchar)(C.CString(content)), (*C.gchar)(C.CString(baseURI)))
 }
 
 // Settings returns the current active settings of this WebView's WebViewGroup.
@@ -80,7 +80,7 @@ func (v *WebView) LoadHTML(content, baseURI string) {
 // See also: webkit_web_view_get_settings at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-get-settings.
 func (v *WebView) Settings() *Settings {
-	return newSettings(C.webkit_web_view_get_settings(v.webView))
+	return newSettings(C.webkit_web_view_get_settings(v.WebKitWebView))
 }
 
 // Title returns the current active title of the WebView.
@@ -88,7 +88,7 @@ func (v *WebView) Settings() *Settings {
 // See also: webkit_web_view_get_title at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-get-title.
 func (v *WebView) Title() string {
-	return C.GoString((*C.char)(C.webkit_web_view_get_title(v.webView)))
+	return C.GoString((*C.char)(C.webkit_web_view_get_title(v.WebKitWebView)))
 }
 
 // URI returns the current active URI of the WebView.
@@ -96,7 +96,7 @@ func (v *WebView) Title() string {
 // See also: webkit_web_view_get_uri at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-get-uri.
 func (v *WebView) URI() string {
-	return C.GoString((*C.char)(C.webkit_web_view_get_uri(v.webView)))
+	return C.GoString((*C.char)(C.webkit_web_view_get_uri(v.WebKitWebView)))
 }
 
 // JavaScriptGlobalContext returns the global JavaScript context used by
@@ -105,7 +105,7 @@ func (v *WebView) URI() string {
 // See also: webkit_web_view_get_javascript_global_context at
 // http://webkitgtk.org/reference/webkit2gtk/stable/WebKitWebView.html#webkit-web-view-get-javascript-global-context
 func (v *WebView) JavaScriptGlobalContext() *gojs.Context {
-	return gojs.NewContextFrom(gojs.RawContext(C.webkit_web_view_get_javascript_global_context(v.webView)))
+	return gojs.NewContextFrom(gojs.RawContext(C.webkit_web_view_get_javascript_global_context(v.WebKitWebView)))
 }
 
 // RunJavaScript runs script asynchronously in the context of the current page
@@ -123,7 +123,7 @@ func (v *WebView) RunJavaScript(script string, resultCallback func(result *gojs.
 	if resultCallback != nil {
 		callback := func(result *C.GAsyncResult) {
 			var jserr *C.GError
-			jsResult := C.webkit_web_view_run_javascript_finish(v.webView, result, &jserr)
+			jsResult := C.webkit_web_view_run_javascript_finish(v.WebKitWebView, result, &jserr)
 			if jsResult == nil {
 				defer C.g_error_free(jserr)
 				msg := C.GoString((*C.char)(jserr.message))
@@ -141,14 +141,14 @@ func (v *WebView) RunJavaScript(script string, resultCallback func(result *gojs.
 			panic(err)
 		}
 	}
-	C.webkit_web_view_run_javascript(v.webView, (*C.gchar)(C.CString(script)), nil, cCallback, userData)
+	C.webkit_web_view_run_javascript(v.WebKitWebView, (*C.gchar)(C.CString(script)), nil, cCallback, userData)
 }
 
 // Destroy destroys the WebView's corresponding GtkWidget and marks its internal
 // WebKitWebView as nil so that it can't be accidentally reused.
 func (v *WebView) Destroy() {
 	v.Widget.Destroy()
-	v.webView = nil
+	v.WebKitWebView = nil
 }
 
 // LoadEvent denotes the different events that happen during a WebView load
@@ -187,7 +187,7 @@ func (v *WebView) GetSnapshot(resultCallback func(result *image.RGBA, err error)
 	if resultCallback != nil {
 		callback := func(result *C.GAsyncResult) {
 			var snapErr *C.GError
-			snapResult := C.webkit_web_view_get_snapshot_finish(v.webView, result, &snapErr)
+			snapResult := C.webkit_web_view_get_snapshot_finish(v.WebKitWebView, result, &snapErr)
 			if snapResult == nil {
 				defer C.g_error_free(snapErr)
 				msg := C.GoString((*C.char)(snapErr.message))
@@ -214,15 +214,10 @@ func (v *WebView) GetSnapshot(resultCallback func(result *image.RGBA, err error)
 		}
 	}
 
-	C.webkit_web_view_get_snapshot(v.webView,
+	C.webkit_web_view_get_snapshot(v.WebKitWebView,
 		(C.WebKitSnapshotRegion)(1), // FullDocument is the only working region at this point
 		(C.WebKitSnapshotOptions)(0),
 		nil,
 		cCallback,
 		userData)
-}
-
-// Returns the pointer to the underlying WebkitWebView
-func (v *WebView) WebKitWebView() *C.WebKitWebView {
-	return v.webView
 }
