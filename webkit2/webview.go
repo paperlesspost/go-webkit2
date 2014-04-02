@@ -108,6 +108,10 @@ func (v *WebView) JavaScriptGlobalContext() *gojs.Context {
 	return gojs.NewContextFrom(gojs.RawContext(C.webkit_web_view_get_javascript_global_context(v.WebKitWebView)))
 }
 
+func (v *WebView) JSGlobalContextRef() *C.JSGlobalContextRef {
+	return C.webkit_web_view_get_javascript_global_context(v.WebKitWebView)
+}
+
 // RunJavaScript runs script asynchronously in the context of the current page
 // in the WebView. Upon completion, resultCallback will be called with the
 // result of evaluating the script, or with an error encountered during
