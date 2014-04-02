@@ -108,7 +108,7 @@ func (v *WebView) JavaScriptGlobalContext() *gojs.Context {
 	return gojs.NewContextFrom(gojs.RawContext(C.webkit_web_view_get_javascript_global_context(v.WebKitWebView)))
 }
 
-func (v *WebView) JSGlobalContextRef() *C.JSGlobalContextRef {
+func (v *WebView) JSGlobalContextRef() C.JSGlobalContextRef {
 	return C.webkit_web_view_get_javascript_global_context(v.WebKitWebView)
 }
 
