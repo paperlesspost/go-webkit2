@@ -50,3 +50,15 @@ func (s *Settings) SetUserAgentWithApplicationDetails(appName, appVersion string
 func (s *Settings) SetEnableWebgl(enabled bool) {
 	C.webkit_settings_set_enable_webgl(s.settings, gboolean(enabled))
 }
+
+// See also webkit_settings_set_enable_xss_auditor at
+// http://webkitgtk.org/reference/webkit2gtk/stable/WebKitSettings.html#webkit-settings-set-enable-xss-auditor
+func (s *Settings) SetEnableXssAuditor(enabled bool) {
+	C.webkit_settings_set_enable_xss_auditor(s.settings, gboolean(enabled))
+}
+
+// See also webkit_settings_set_enable_accelerated_2d_canvas at
+// http://webkitgtk.org/reference/webkit2gtk/stable/WebKitSettings.html#webkit-settings-set-enable-accelerated-2d-canvas
+func (s *Settings) SetEnableAccelerated2dCanvas(enabled bool) {
+	C.webkit_settings_set_enable_accelerated_2d_canvas(s.settings, gboolean(enabled))
+}
